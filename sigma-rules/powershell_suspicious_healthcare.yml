@@ -1,0 +1,32 @@
+title: Suspicious PowerShell Execution in Healthcare Systems
+id: 1f23a8c2-1234-4a9f-bb12-9876543210ab
+status: experimental
+description: Detects suspicious PowerShell command execution often used in ransomware attacks targeting healthcare organizations.
+author: Tendai Nemure
+date: 2025/09/29
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://www.cisa.gov/news-events/alerts
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - 'Invoke-WebRequest'
+      - 'DownloadString'
+      - 'Base64'
+      - 'IEX'
+  condition: selection
+fields:
+  - Image
+  - CommandLine
+  - ParentImage
+falsepositives:
+  - Administrators running legitimate scripts
+level: high
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - healthcare
